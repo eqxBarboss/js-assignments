@@ -360,7 +360,7 @@ function isBracketsBalanced(str) {
 
 
 /**
- * Returns the human readable string of time period specified by the start and end time.
+ * Returns the human readable string of time(delta specified by the start and end time.
  * The result string should be constrcuted using the folliwing rules:
  *
  * ---------------------------------------------------------------------
@@ -391,7 +391,50 @@ function isBracketsBalanced(str) {
  *
  */
 function timespanToHumanString(startDate, endDate) {
-    throw new Error('Not implemented');
+    let delta = (endDate.getTime() - startDate.getTime()) / 1000;
+
+    const toMins = (x) => x / 60;
+    const toHours = (x) => x / 3600;
+    const toDays = (x) => x / (3600 * 24);
+    const toMonths = (x) => x / (3600 * 24 * 30);
+    const toYears = (x) => x / (3600 * 24 * 30 * 12);
+
+    const halfToLowerRound = (x) => Math.trunc(x) + (x - Math.trunc(x) > 0.5 ? 1 : 0);
+
+    switch (true) {
+        case (delta <= 45):
+            return 'a few seconds ago';
+            break;
+        case (delta <= 90):
+            return 'a minute ago';
+            break;
+        case (toMins(delta) <= 45):
+            return `${halfToLowerRound(toMins(delta))} minutes ago`;
+            break;
+        case (toMins(delta) <= 90):
+            return 'an hour ago';
+            break;
+        case (toHours(delta) <= 22):
+            return `${halfToLowerRound(toHours(delta))} hours ago`;
+            break;
+        case (toHours(delta) <= 36):
+            return 'a day ago';
+            break;
+        case (toDays(delta) <= 25):
+            return `${halfToLowerRound(toDays(delta))} days ago`;
+            break;
+        case (toDays(delta) <= 45):
+            return 'a month ago';
+            break;
+        case (toDays(delta) <= 345):
+            return `${halfToLowerRound(toMonths(delta))} months ago`;
+            break;
+        case (toDays(delta) <= 545):
+            return 'a year ago';
+            break;
+        default:
+            return `${halfToLowerRound(toYears(delta))} years ago`;
+    }
 }
 
 /**
@@ -431,7 +474,15 @@ function toNaryString(num, n) {
  *   ['/web/favicon.ico', '/web-scripts/dump', '/webalizer/logs'] => '/'
  */
 function getCommonDirectoryPath(pathes) {
-    throw new Error('Not implemented');
+    pathes.sort();
+    let slash = -1;
+    for(let i = 0; i < pathes[0].length; i++){
+        if(pathes[0][i] != pathes[pathes.length - 1][i])
+            break;
+        if(pathes[0][i] == '/')
+            slash = i;
+    }
+    return slash == -1 ? '' : pathes[0].slice(0, slash + 1);
 }
 
 
@@ -454,7 +505,8 @@ function getCommonDirectoryPath(pathes) {
  *
  */
 function getMatrixProduct(m1, m2) {
-    throw new Error('Not implemented');
+    let res = new Array(m1.length).fill(0).map(row => new Array(m2[0].length).fill(0));
+    return res.map((row, i) => row.map((x, j) => m1[i].reduce((prev, curr, k) => prev + curr * m2[k][j], 0)));
 }
 
 
@@ -489,7 +541,23 @@ function getMatrixProduct(m1, m2) {
  *
  */
 function evaluateTicTacToePosition(position) {
-    throw new Error('Not implemented');
+    if (position[0][0] == position[0][1] && position[0][1] == position[0][2] && position[0][0] !== undefined)
+        return position[0][0];
+    if (position[1][0] == position[1][1] && position[1][1] == position[1][2] && position[1][0] !== undefined)
+        return position[1][0];
+    if (position[2][0] == position[2][1] && position[2][1] == position[2][2] && position[2][0] !== undefined)
+        return position[2][0];
+    if (position[0][0] == position[1][0] && position[1][0] == position[2][0] && position[0][0] !== undefined)
+        return position[0][0];
+    if (position[0][1] == position[1][1] && position[1][1] == position[2][1] && position[0][1] !== undefined)
+        return position[0][1];
+    if (position[0][2] == position[1][2] && position[1][2] == position[2][2] && position[0][2] !== undefined)
+        return position[0][2];
+    if (position[0][0] == position[1][1] && position[1][1] == position[2][2] && position[0][0] !== undefined)
+        return position[0][0];
+    if (position[0][2] == position[1][1] && position[1][1] == position[2][0] && position[0][2] !== undefined)
+        return position[0][2];
+    return undefined;
 }
 
 
