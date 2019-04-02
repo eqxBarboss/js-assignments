@@ -47,7 +47,7 @@ function findStringInSnakingPuzzle(puzzle, searchStr) {
 function* getPermutations(chars) {
     let result = [];
 
-    function perm(str, pref = ""){
+    function perm(str, pref){
         if (!str.length)
             result.push(pref);
         for (let i = 0; i < str.length; i++){
